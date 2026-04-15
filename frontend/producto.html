@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detalle de producto en MediApp — Información completa, precios y opciones de compra.">
+    <title>MediApp - Producto</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="detail-page">
+    <!-- Navbar Principal -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="home.html" class="nav-logo">
+                    <svg viewBox="0 0 24 24" fill="none" class="logo-svg" stroke="#2de07b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>MediApp</span>
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="carrito.html" class="icon-btn" title="Carrito">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </a>
+                <a href="perfil-persona.html" class="nav-avatar-link"><div class="user-avatar"></div></a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="product-detail">
+        <div class="product-header">
+            <a href="home.html" class="back-link">← Volver al catálogo</a>
+            <h1 id="product-title">Cargando...</h1>
+            <div id="product-descuento"></div>
+        </div>
+        <div class="product-content">
+            <div class="product-image-wrapper">
+                <img class="product-image" id="product-image" src="" alt="Producto">
+            </div>
+            <div class="product-details">
+                <p id="product-description" class="product-desc-text"></p>
+                
+                <div class="product-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Tienda</span>
+                        <span class="meta-value" id="product-store"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Ciudad</span>
+                        <span class="meta-value" id="product-store-city"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Categoría</span>
+                        <span class="meta-value" id="product-category"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Vence el</span>
+                        <span class="meta-value" id="product-vencimiento"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Stock</span>
+                        <span class="meta-value" id="product-stock"></span>
+                    </div>
+                </div>
+
+                <div class="product-price-section">
+                    <div class="price-row" id="product-price" style="gap:12px;"></div>
+                    <div class="expire-date" id="product-expire"></div>
+                </div>
+            </div>
+        </div>
+        <div class="product-actions">
+            <button class="btn-add-cart" id="btn-add-cart">Agregar al carrito</button>
+            <button class="btn-buy-now" id="btn-buy-now">Comprar ahora</button>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/producto.js"></script>
+</body>
+</html>

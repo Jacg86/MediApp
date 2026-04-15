@@ -1,45 +1,228 @@
-# MediApp - Prototipo Web
+# MediApp — Aplicación Web Full-Stack
 
-Este proyecto es una maqueta (mockup) en HTML5 y CSS3 para **MediApp (Expirapp)**, una plataforma web destinada a conectar personas con tiendas y supermercados para encontrar grandes ofertas en productos cercanos a su fecha de vencimiento.
+Plataforma web para la venta de productos farmacéuticos cercanos a su fecha de vencimiento a precios reducidos. Construida con el patrón **MVC** usando **Node.js**, **Express**, **PostgreSQL** y **HTML/CSS/JS Vanilla**.
 
-## Vistas Implementadas
+---
 
-El prototipo consta actualmente de las siguientes pantallas:
+## Tabla de Contenidos
 
-1. **[Inicio de Sesión (`index.html`)](index.html):** Pantalla principal de acceso para los usuarios existentes.
-2. **[Registro de Usuarios (`registro.html`)](registro.html):** Vista dividida mediante pestañas que permite a los nuevos usuarios registrarse como "Persona" o como "Tienda", mostrando campos específicos para cada rol.
-3. **[Página Principal / Home (`home.html`)](home.html):** Tablero principal donde los usuarios pueden buscar, filtrar y encontrar los productos disponibles en oferta. Cuenta con una grilla de tarjetas de productos responsiva.
-4. **[Perfil de Persona (`perfil-persona.html`)](perfil-persona.html):** Vista donde un comprador puede gestionar su información personal, dirección de entrega y seguridad de su cuenta.
-5. **[Perfil de Tienda (`perfil-tienda.html`)](perfil-tienda.html):** Panel donde los negocios pueden administrar los datos públicos de su tienda y las configuraciones de seguridad.
+- [Arquitectura](#arquitectura)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación y Ejecución](#instalación-y-ejecución)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [API REST](#api-rest)
+- [Usuarios de Prueba](#usuarios-de-prueba)
+- [Funcionalidades](#funcionalidades)
 
-## Tecnologías Usadas
+---
 
-Para mantener la ligereza y asegurar que el código sea fácil de integrar posteriormente en cualquier framework de JavaScript (React, Vue, Angular), este prototipo fue creado utilizando:
+## Arquitectura
 
-*   **HTML5 Semántico:** Garantizando la accesibilidad y correcta estructura de la información.
-*   **CSS3 (Vanilla):** Sin depender de frameworks externos para los estilos.
-    *   Uso intensivo de **Flexbox** y **CSS Grid** para la disposición de los elementos.
-    *   Diseño **Responsivo** (Mobile First) que adapta la UI a dispositivos móviles, tablets y escritorios mediante Media Queries.
-    *   Uso de **Variables CSS** (Custom Properties) para definir la paleta de colores global y facilitar futuros cambios en el tema.
-*   **Íconos SVG Inline:** Íconos vectoriales incrustados directamente en el código para evitar peticiones HTTP adicionales y garantizar la máxima nitidez.
-*   **Tipografía Moderna:** Integración de la fuente *Inter* de Google Fonts para un aspecto limpio y actual.
+```
+┌──────────────┐     HTTP/JSON     ┌──────────────────┐     SQL     ┌──────────────┐
+│   Frontend   │ ◄──────────────►  │  Backend (API)   │ ◄────────►  │  PostgreSQL  │
+│  HTML/CSS/JS │                   │  Express + MVC   │             │   mediapp    │
+└──────────────┘                   └──────────────────┘             └──────────────┘
+```
 
-## Paleta de Colores Principal
+- **Frontend**: HTML5, CSS3, JavaScript Vanilla — consume la API REST
+- **Backend**: Node.js + Express — patrón MVC (Models, Controllers, Routes)
+- **Base de datos**: PostgreSQL 14+ — 10 tablas, vistas, triggers, índices
+- **Autenticación**: JWT (JSON Web Tokens)
 
-*   **Color Primario (Acento):** `#2de07b` (Verde vibrante)
-*   **Texto Principal:** `#111827` (Gris casi negro)
-*   **Texto Secundario (Muted):** `#6b7280` (Gris medio)
-*   **Fondo Principal:** `#ffffff` (Blanco)
-*   **Fondo Secundario (Paneles/Body):** `#f8f9fa` (Gris muy claro)
+---
 
-## Sugerencias de Integración Futura
+## Requisitos Previos
 
-Esta estructura es ideal como punto de partida visual. Sin embargo, para escalar este proyecto hacia una aplicación dinámica completa, se recomienda:
+1. **Node.js** v18+ — [Descargar](https://nodejs.org/)
+2. **PostgreSQL** v14+ — [Descargar](https://www.postgresql.org/download/)
+3. **npm** (incluido con Node.js)
 
-1.  **Modularización:** Separar componentes de la UI (Navbar, Footer, ProductCard) en componentes reutilizables utilizando el framework elegido para el Frontend.
-2.  **Lógica Externa:** Mover el pequeño script de alternancia de roles (Persona/Tienda) incluido en `registro.html` a su propio archivo o incluirlo como estado dinámico (`useState`, `reactive`) de la aplicación real.
-3.  **Procesamiento de Estilos:** Dividir las (actualmente extensas) utilidades de `styles.css` en módulos independientes (Ej: `_navbar.css`, `_forms.css`) si el proyecto sigue creciendo en escala sin usar un preprocesador o frameworks como Tailwind.
+---
 
-## Contribuciones
+## Instalación y Ejecución
 
-Para probar la interfaz, simplemente clona o descarga el repositorio y abre cualquiera de los archivos `.html` (empezando preferiblemente por `index.html`) en el navegador de tu preferencia. No se requieren instalaciones de librerías ni dependencias para visualizar la maqueta.
+### 1. Clonar o descargar el proyecto
+
+```bash
+cd MediApp
+```
+
+### 2. Crear la base de datos en PostgreSQL
+
+Abrir **pgAdmin** o **psql** y ejecutar:
+
+```sql
+CREATE DATABASE mediapp;
+```
+
+Luego conectarse a la base de datos `mediapp` y ejecutar el contenido del archivo:
+
+```
+database/script.sql
+```
+
+Esto creará todas las tablas, tipos ENUM, vistas, triggers e índices (sin datos aún).
+
+### 3. Configurar variables de entorno
+
+Editar el archivo `backend/.env` con tus credenciales de PostgreSQL:
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=tu_contraseña
+DB_NAME=mediapp
+```
+
+### 4. Instalar dependencias del backend
+
+```bash
+cd backend
+npm install
+```
+
+### 5. Poblar la base de datos con datos de prueba
+
+```bash
+npm run seed
+```
+
+Esto inserta roles, usuarios (con contraseñas bcrypt válidas), tiendas, categorías, productos y datos de ejemplo.
+
+### 6. Iniciar el servidor
+
+```bash
+npm run dev
+npx -y http-server ./frontend -p 8080 -c-1
+```
+
+### 7. Abrir la aplicación
+
+Navegar a: **http://localhost:3000**
+
+> **Usuario de prueba:** `ana@correo.com` / `mediapp123`
+
+---
+
+## Estructura del Proyecto
+
+```
+MediApp/
+├── backend/
+│   ├── config/
+│   │   └── db.js                 # Pool de conexiones PostgreSQL
+│   ├── controllers/
+│   │   ├── authController.js     # Login y registro
+│   │   ├── productoController.js # CRUD productos
+│   │   ├── carritoController.js  # Gestión del carrito
+│   │   ├── pedidoController.js   # Gestión de pedidos
+│   │   ├── usuarioController.js  # Perfil de usuario
+│   │   ├── tiendaController.js   # Perfil de tienda
+│   │   └── categoriaController.js # Listado de categorías
+│   ├── models/
+│   │   ├── usuarioModel.js       # Queries de usuarios
+│   │   ├── productoModel.js      # Queries de productos
+│   │   ├── carritoModel.js       # Queries del carrito
+│   │   ├── pedidoModel.js        # Queries de pedidos
+│   │   ├── tiendaModel.js        # Queries de tiendas
+│   │   └── categoriaModel.js     # Queries de categorías
+│   ├── routes/                   # Definición de rutas HTTP
+│   ├── middleware/
+│   │   ├── authMiddleware.js     # Verificación JWT
+│   │   ├── errorHandler.js       # Manejo global de errores
+│   │   └── validators.js         # Validaciones con express-validator
+│   ├── .env                      # Variables de entorno
+│   ├── package.json
+│   └── server.js                 # Punto de entrada
+├── frontend/
+│   ├── css/styles.css            # Estilos completos
+│   ├── js/
+│   │   ├── api.js                # Cliente HTTP con JWT
+│   │   ├── utils.js              # Funciones de utilidad
+│   │   ├── auth.js               # Lógica de login
+│   │   ├── registro.js           # Lógica de registro
+│   │   ├── home.js               # Catálogo dinámico
+│   │   ├── producto.js           # Detalle de producto
+│   │   ├── carrito.js            # Gestión del carrito
+│   │   ├── pedido.js             # Crear/ver pedidos
+│   │   ├── perfil.js             # Perfil de usuario
+│   │   └── perfilTienda.js       # Perfil de tienda
+│   ├── img/                      # Imágenes de productos
+│   └── *.html                    # Páginas HTML
+├── database/
+│   └── script.sql                # Script completo de la BD
+└── README.md
+```
+
+---
+
+## API REST
+
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| POST | `/api/auth/login` | Iniciar sesión | ❌ |
+| POST | `/api/auth/registro` | Registrar usuario/tienda | ❌ |
+| GET | `/api/auth/me` | Usuario actual | ✅ |
+| GET | `/api/productos` | Catálogo (con filtros) | ❌ |
+| GET | `/api/productos/:id` | Detalle de producto | ❌ |
+| POST | `/api/productos` | Crear producto | ✅ Tienda |
+| PUT | `/api/productos/:id` | Actualizar producto | ✅ Tienda |
+| DELETE | `/api/productos/:id` | Eliminar producto | ✅ Tienda |
+| GET | `/api/carrito` | Mi carrito | ✅ |
+| POST | `/api/carrito/items` | Agregar al carrito | ✅ |
+| PUT | `/api/carrito/items/:id` | Actualizar cantidad | ✅ |
+| DELETE | `/api/carrito/items/:id` | Quitar del carrito | ✅ |
+| POST | `/api/pedidos` | Crear pedido | ✅ |
+| GET | `/api/pedidos` | Mis pedidos | ✅ |
+| GET | `/api/usuarios/perfil` | Mi perfil | ✅ |
+| PUT | `/api/usuarios/perfil` | Actualizar perfil | ✅ |
+| PUT | `/api/usuarios/password` | Cambiar contraseña | ✅ |
+| GET | `/api/categorias` | Listar categorías | ❌ |
+
+---
+
+## Usuarios de Prueba
+
+Todos usan la contraseña: **`mediapp123`**
+
+| Correo | Rol | Descripción |
+|--------|-----|-------------|
+| `ana@correo.com` | Consumidor | Usuario consumidor de ejemplo |
+| `carlos@correo.com` | Consumidor | Otro consumidor |
+| `saludtotal@tienda.com` | Tienda | Droguería Salud Total |
+| `farmcentral@tienda.com` | Tienda | Farmacia Central |
+
+---
+
+## Funcionalidades
+
+### Para Consumidores
+- Registro e inicio de sesión
+- Explorar catálogo con filtros (categoría, ciudad, búsqueda)
+- Ver detalle de productos
+- Agregar/quitar productos del carrito
+- Crear pedidos con dirección de entrega
+- Ver historial de pedidos
+- Editar perfil y cambiar contraseña
+
+### Para Tiendas
+- Registro como tienda (con NIT)
+- Gestionar perfil del negocio
+- Cambiar contraseña
+
+### Técnicas
+- Validaciones frontend y backend
+- Manejo de errores con respuestas JSON
+- JWT para autenticación stateless
+- Transacciones SQL para consistencia
+- Triggers para actualizar timestamps
+- Vista SQL para el catálogo activo
+- Diseño responsive
+
+---
+
+## Licencia
+
+Proyecto académico — Programación Web.
