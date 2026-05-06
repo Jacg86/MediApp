@@ -9,8 +9,11 @@ const API = {
     /**
      * Obtener headers con token JWT si existe
      */
-    _getHeaders() {
-        const headers = { 'Content-Type': 'application/json' };
+    _getHeaders(isFormData = false) {
+        const headers = {};
+        if (!isFormData) {
+            headers['Content-Type'] = 'application/json';
+        }
         const token = localStorage.getItem('mediapp_token');
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
@@ -59,10 +62,11 @@ const API = {
      * POST request
      */
     async post(endpoint, body) {
+        const isFormData = body instanceof FormData;
         const response = await fetch(`${API_BASE}${endpoint}`, {
             method: 'POST',
-            headers: this._getHeaders(),
-            body: JSON.stringify(body),
+            headers: this._getHeaders(isFormData),
+            body: isFormData ? body : JSON.stringify(body),
         });
         return this._handleResponse(response);
     },
@@ -71,10 +75,11 @@ const API = {
      * PUT request
      */
     async put(endpoint, body) {
+        const isFormData = body instanceof FormData;
         const response = await fetch(`${API_BASE}${endpoint}`, {
             method: 'PUT',
-            headers: this._getHeaders(),
-            body: JSON.stringify(body),
+            headers: this._getHeaders(isFormData),
+            body: isFormData ? body : JSON.stringify(body),
         });
         return this._handleResponse(response);
     },

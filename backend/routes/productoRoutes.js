@@ -5,6 +5,7 @@ const { Router } = require('express');
 const ProductoController = require('../controllers/productoController');
 const { verifyToken, requireRole } = require('../middleware/authMiddleware');
 const { productoRules, handleValidation } = require('../middleware/validators');
+const upload = require('../middleware/uploadMiddleware');
 
 const router = Router();
 
@@ -18,10 +19,10 @@ router.get('/tienda/mis-productos', verifyToken, requireRole('Tienda'), Producto
 router.get('/:id', ProductoController.detalle);
 
 // POST /api/productos — crear producto (requiere rol Tienda)
-router.post('/', verifyToken, requireRole('Tienda'), productoRules, handleValidation, ProductoController.crear);
+router.post('/', verifyToken, requireRole('Tienda'), upload.single('imagen'), productoRules, handleValidation, ProductoController.crear);
 
 // PUT /api/productos/:id — actualizar producto
-router.put('/:id', verifyToken, requireRole('Tienda'), ProductoController.actualizar);
+router.put('/:id', verifyToken, requireRole('Tienda'), upload.single('imagen'), ProductoController.actualizar);
 
 // DELETE /api/productos/:id — eliminar producto
 router.delete('/:id', verifyToken, requireRole('Tienda'), ProductoController.eliminar);

@@ -86,7 +86,12 @@ const ProductoController = {
                 });
             }
 
-            const { nombre, descripcion, id_categoria, precio_original, precio_oferta, stock, fecha_vencimiento, imagen_url, titulo_publicacion } = req.body;
+            let { nombre, descripcion, id_categoria, precio_original, precio_oferta, stock, fecha_vencimiento, imagen_url, titulo_publicacion } = req.body;
+
+            // Si hay un archivo subido, usamos su ruta
+            if (req.file) {
+                imagen_url = `img/uploads/${req.file.filename}`;
+            }
 
             // Crear producto
             const producto = await ProductoModel.create({
@@ -133,7 +138,13 @@ const ProductoController = {
                 return res.status(403).json({ success: false, message: 'No tienes permiso para editar este producto.' });
             }
 
-            const producto = await ProductoModel.update(req.params.id, req.body);
+            const updateData = { ...req.body };
+            
+            if (req.file) {
+                updateData.imagen_url = `img/uploads/${req.file.filename}`;
+            }
+
+            const producto = await ProductoModel.update(req.params.id, updateData);
 
             res.json({
                 success: true,

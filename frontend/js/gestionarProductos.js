@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('prod-precio-original').value = p.precio_original;
         document.getElementById('prod-precio-oferta').value = p.precio_oferta || '';
         document.getElementById('prod-descripcion').value = p.descripcion || '';
-        document.getElementById('prod-imagen').value = p.imagen_url || '';
+        document.getElementById('prod-imagen-file').value = ''; // Reset file input
 
         if (p.fecha_vencimiento) {
             document.getElementById('prod-vencimiento').value = p.fecha_vencimiento.split('T')[0];
@@ -157,23 +157,33 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const id = document.getElementById('prod-id').value;
-        const payload = {
-            nombre: document.getElementById('prod-nombre').value,
-            id_categoria: document.getElementById('prod-categoria').value,
-            stock: parseInt(document.getElementById('prod-stock').value, 10),
-            precio_original: parseFloat(document.getElementById('prod-precio-original').value),
-            precio_oferta: document.getElementById('prod-precio-oferta').value ? parseFloat(document.getElementById('prod-precio-oferta').value) : null,
-            descripcion: document.getElementById('prod-descripcion').value,
-            imagen_url: document.getElementById('prod-imagen').value,
-            fecha_vencimiento: document.getElementById('prod-vencimiento').value || null
-        };
+        const formData = new FormData();
+        
+        formData.append('nombre', document.getElementById('prod-nombre').value);
+        formData.append('id_categoria', document.getElementById('prod-categoria').value);
+        formData.append('stock', document.getElementById('prod-stock').value);
+        formData.append('precio_original', document.getElementById('prod-precio-original').value);
+        
+        const precioOferta = document.getElementById('prod-precio-oferta').value;
+        if (precioOferta) formData.append('precio_oferta', precioOferta);
+        
+        const descripcion = document.getElementById('prod-descripcion').value;
+        if (descripcion) formData.append('descripcion', descripcion);
+        
+        const fechaVencimiento = document.getElementById('prod-vencimiento').value;
+        if (fechaVencimiento) formData.append('fecha_vencimiento', fechaVencimiento);
+
+        const fileInput = document.getElementById('prod-imagen-file');
+        if (fileInput.files.length > 0) {
+            formData.append('imagen', fileInput.files[0]);
+        }
 
         try {
             if (id) {
-                await API.put(`/productos/${id}`, payload);
+                await API.put(`/productos/${id}`, formData);
                 showToast('Producto actualizado exitosamente.');
             } else {
-                await API.post('/productos', payload);
+                await API.post('/productos', formData);
                 showToast('Producto creado exitosamente.');
             }
             modal.style.display = 'none';
