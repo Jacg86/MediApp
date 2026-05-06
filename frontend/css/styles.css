@@ -1903,7 +1903,7 @@ body {
 }
 .input-modern:focus { border-color: var(--primary-color); }
 
-/* --- ACCIONES RÁPIDAS TIENDA --- */
+/* --- ACCIONES Rï¿½PIDAS TIENDA --- */
 .store-quick-actions {
     display: flex;
     justify-content: center;
@@ -1947,4 +1947,33 @@ body {
     background-color: #f9fafb;
     border-color: #d1d5db;
     transform: translateY(-2px);
+}
+
+
+.fab-add-product {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    /* no important */
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(45, 224, 123, 0.4);
+    z-index: 1000;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.fab-add-product:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(45, 224, 123, 0.5);
+    background-color: #25cc6b;
+}
+
+.fab-add-product svg {
+    width: 28px;
+    height: 28px;
 }

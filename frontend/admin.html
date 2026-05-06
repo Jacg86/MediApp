@@ -174,7 +174,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
     const usuario = obtenerUsuario();
-    if (!usuario || usuario.id_rol !== 1) { // 1 es el id de Admin
+    if (!usuario || (usuario.nombre_rol !== 'Usuario' && parseInt(usuario.id_rol) !== 1)) { // 1 es el id de Admin
         showToast('Acceso denegado', 'error');
         window.location.href = 'home.html';
         return;

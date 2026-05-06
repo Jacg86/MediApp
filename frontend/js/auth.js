@@ -2,9 +2,14 @@
 //  Auth — Lógica del login y registro
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Si ya está autenticado, redirigir al home
+    // Si ya está autenticado, redirigir
     if (estaAutenticado() && (window.location.pathname.endsWith('index.html') || window.location.pathname === '/')) {
-        window.location.href = '/home.html';
+        const usuario = obtenerUsuario();
+        if (usuario && (usuario.nombre_rol === 'Usuario' || parseInt(usuario.id_rol) === 1)) {
+            window.location.href = '/admin.html';
+        } else {
+            window.location.href = '/home.html';
+        }
         return;
     }
 
@@ -33,7 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('¡Bienvenido, ' + result.data.usuario.nombre + '!');
 
                 setTimeout(() => {
-                    window.location.href = '/home.html';
+                    if (result.data.usuario.nombre_rol === 'Usuario' || parseInt(result.data.usuario.id_rol) === 1) {
+                        window.location.href = '/admin.html';
+                    } else {
+                        window.location.href = '/home.html';
+                    }
                 }, 800);
 
             } catch (error) {

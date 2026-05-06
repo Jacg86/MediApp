@@ -2,10 +2,17 @@
 //  Home — Catálogo dinámico de productos
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
+    const usuario = obtenerUsuario();
+    
+    // Si es administrador, no debería estar en la vista de consumidor
+    if (usuario && (usuario.nombre_rol === 'Usuario' || parseInt(usuario.id_rol) === 1)) {
+        window.location.href = '/admin.html';
+        return;
+    }
+
     actualizarNavbar();
 
     // Mostrar acciones rápidas si es tienda
-    const usuario = obtenerUsuario();
     if (usuario && usuario.nombre_rol === 'Tienda') {
         const storeQuickActions = document.getElementById('store-quick-actions');
         if (storeQuickActions) {

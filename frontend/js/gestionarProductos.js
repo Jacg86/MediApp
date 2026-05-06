@@ -18,6 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
         await cargarTiendaNav();
         await cargarCategorias();
         await cargarMisProductos();
+
+        // Auto-abrir modal si la URL dice action=new
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('action') === 'new') {
+            document.getElementById('btn-nuevo-producto').click();
+        }
     }
 
     async function cargarTiendaNav() {
