@@ -3,7 +3,7 @@
 // ================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (!requiereAuth()) return;
+    if (!requiereRol('Tienda')) return;
     actualizarNavbar();
 
     const productosContainer = document.getElementById('productos-container');

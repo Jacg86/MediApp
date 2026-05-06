@@ -180,26 +180,55 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    try {
-        // En una implementación real, aquí se llamarían a los endpoints de admin
-        // Como mockup, mostraremos datos estáticos simulados
-        document.getElementById('total-users').textContent = '245';
-        document.getElementById('total-stores').textContent = '12';
+    async function cargarDatos() {
+        try {
+            const statsRes = await API.get('/admin/stats');
+            if (statsRes.success) {
+                document.getElementById('total-users').textContent = statsRes.data.totalUsers;
+                document.getElementById('total-stores').textContent = statsRes.data.totalStores;
+            }
 
-        const tbody = document.getElementById('stores-table-body');
-        tbody.innerHTML = `
-            <tr>
-                <td>4</td>
-                <td>Droguería Andina</td>
-                <td>900.111.004-4</td>
-                <td>Barranquilla</td>
-                <td><span class="badge badge-warning">Pendiente</span></td>
-                <td><button class="btn-light-green btn-sm" onclick="showToast('Tienda verificada exitosamente', 'success')">Verificar</button></td>
-            </tr>
-        `;
-    } catch (err) {
-        console.error(err);
+            const tiendasRes = await API.get('/admin/tiendas-pendientes');
+            const tbody = document.getElementById('stores-table-body');
+            
+            if (tiendasRes.success && tiendasRes.data.length > 0) {
+                let html = '';
+                tiendasRes.data.forEach(t => {
+                    html += `
+                        <tr>
+                            <td>${t.id_tienda}</td>
+                            <td>${t.nombre}</td>
+                            <td>${t.nit}</td>
+                            <td>${t.ciudad}</td>
+                            <td><span class="badge badge-warning">Pendiente</span></td>
+                            <td><button class="btn-light-green" style="padding: 6px 12px; font-size: 12px;" onclick="verificarTienda(${t.id_tienda})">Verificar</button></td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            } else {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px;">No hay tiendas pendientes de verificación.</td></tr>`;
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Error cargando datos del panel', 'error');
+        }
     }
+
+    window.verificarTienda = async function(id) {
+        if (!confirm('¿Estás seguro de verificar esta tienda?')) return;
+        try {
+            const result = await API.put(`/admin/tiendas/${id}/verificar`, {});
+            if (result.success) {
+                showToast('Tienda verificada exitosamente', 'success');
+                cargarDatos(); // Recargar la tabla
+            }
+        } catch (error) {
+            showToast(error.message || 'Error al verificar tienda', 'error');
+        }
+    }
+
+    cargarDatos();
 });
 </script>
 </body>

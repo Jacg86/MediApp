@@ -20,6 +20,7 @@ const pedidoRoutes = require('./routes/pedidoRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const tiendaRoutes = require('./routes/tiendaRoutes');
 const categoriaRoutes = require('./routes/categoriaRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +42,7 @@ app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/tiendas', tiendaRoutes);
 app.use('/api/categorias', categoriaRoutes);
+app.use('/api/admin', adminRoutes);
 
 // ── Ruta de salud ────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

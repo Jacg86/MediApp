@@ -120,3 +120,14 @@ function requiereAuth() {
     }
     return true;
 }
+
+function requiereRol(rolNombreEsperado) {
+    if (!requiereAuth()) return false;
+    const usuario = obtenerUsuario();
+    if (!usuario || usuario.nombre_rol !== rolNombreEsperado) {
+        alert('Acceso denegado: no tienes permisos para ver esta página.');
+        window.location.href = '/home.html';
+        return false;
+    }
+    return true;
+}

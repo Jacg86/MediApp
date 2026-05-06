@@ -2,7 +2,7 @@
 //  Perfil Tienda — Gestión del perfil de la tienda
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    if (!requiereAuth()) return;
+    if (!requiereRol('Tienda')) return;
     actualizarNavbar();
 
     const inputNombre = document.getElementById('store-nombre');

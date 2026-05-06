@@ -18,10 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const filterCategoria = document.getElementById('filter-categoria');
     const filterCiudad = document.getElementById('filter-ciudad');
+    const filterOrden = document.getElementById('filter-orden');
 
     let currentOffset = 0;
     const LIMIT = 12;
-    let currentFilters = {};
+    let currentFilters = {
+        orden: 'vencimiento_asc'
+    };
 
     // ── Cargar categorías en el filtro ────────────────────────────
     async function cargarCategorias() {
@@ -84,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentFilters.categoria) endpoint += `&categoria=${encodeURIComponent(currentFilters.categoria)}`;
             if (currentFilters.ciudad) endpoint += `&ciudad=${encodeURIComponent(currentFilters.ciudad)}`;
             if (currentFilters.buscar) endpoint += `&buscar=${encodeURIComponent(currentFilters.buscar)}`;
+            if (currentFilters.orden) endpoint += `&orden=${encodeURIComponent(currentFilters.orden)}`;
 
             const result = await API.get(endpoint);
 
@@ -163,6 +167,15 @@ document.addEventListener('DOMContentLoaded', () => {
         filterCiudad.addEventListener('change', (e) => {
             currentOffset = 0;
             currentFilters.ciudad = e.target.value || null;
+            cargarProductos();
+        });
+    }
+
+    // Filtro orden
+    if (filterOrden) {
+        filterOrden.addEventListener('change', (e) => {
+            currentOffset = 0;
+            currentFilters.orden = e.target.value;
             cargarProductos();
         });
     }

@@ -9,7 +9,7 @@ const ProductoModel = {
      * Obtener catálogo activo con filtros opcionales
      * Usa la vista 'catalogo_activo' definida en el script SQL
      */
-    async getCatalogo({ categoria, ciudad, precioMin, precioMax, diasMax, limit = 20, offset = 0 }) {
+    async getCatalogo({ categoria, ciudad, precioMin, precioMax, diasMax, limit = 20, offset = 0, orden }) {
         let sql = `SELECT * FROM catalogo_activo WHERE 1=1`;
         const params = [];
         let paramIndex = 1;
@@ -35,7 +35,16 @@ const ProductoModel = {
             params.push(diasMax);
         }
 
-        sql += ` ORDER BY dias_para_vencer ASC LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
+        let orderBy = `ORDER BY dias_para_vencer ASC`; // default
+        if (orden === 'precio_asc') {
+            orderBy = `ORDER BY precio_oferta ASC`;
+        } else if (orden === 'descuento_desc') {
+            orderBy = `ORDER BY descuento_pct DESC`;
+        } else if (orden === 'vencimiento_asc') {
+            orderBy = `ORDER BY dias_para_vencer ASC`;
+        }
+
+        sql += ` ${orderBy} LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
         params.push(limit, offset);
 
         const result = await query(sql, params);

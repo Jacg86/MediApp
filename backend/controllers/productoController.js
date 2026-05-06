@@ -12,7 +12,7 @@ const ProductoController = {
      */
     async listar(req, res, next) {
         try {
-            const { categoria, ciudad, precio_min, precio_max, dias_max, limit, offset, buscar } = req.query;
+            const { categoria, ciudad, precio_min, precio_max, dias_max, limit, offset, buscar, orden } = req.query;
 
             // Si hay búsqueda, usar el método de búsqueda
             if (buscar) {
@@ -32,6 +32,7 @@ const ProductoController = {
                 diasMax: dias_max ? parseInt(dias_max) : undefined,
                 limit: parseInt(limit) || 20,
                 offset: parseInt(offset) || 0,
+                orden: orden || null,
             });
 
             res.json({
