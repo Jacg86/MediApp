@@ -129,60 +129,63 @@ function storeIconSVG() {
 }
 
 /**
- * Actualizar el navbar según el estado de autenticación
+ * Actualizar el navbar según el rol de autenticación
  */
 function actualizarNavbar() {
     const usuario = obtenerUsuario();
     if (!usuario) return;
 
-    // Actualizar avatar o nombre si existen elementos
-    const avatarLinks = document.querySelectorAll('.nav-avatar-link');
+    const navRight = document.querySelector('.nav-right');
+    if (!navRight) return;
+
+    // ── Lógica para Administrador ──
+    if (usuario.nombre_rol === 'Usuario' || usuario.id_rol === 1) {
+        navRight.innerHTML = `
+            <a href="admin.html" style="text-decoration: none; color: #475569; font-weight: 500;">Panel Admin</a>
+            <a href="#" onclick="event.preventDefault(); cerrarSesion();" style="text-decoration: none; color: #ef4444; font-weight: 600;">Cerrar sesión</a>
+        `;
+        
+        // Ocultar buscador y ubicación en todas las vistas si es admin
+        const search = document.querySelector('.nav-center');
+        if (search) search.style.display = 'none';
+        const location = document.querySelector('.nav-location');
+        if (location) location.style.display = 'none';
+        
+        return;
+    }
+
+    // ── Lógica para Tienda ──
     if (usuario.nombre_rol === 'Tienda') {
-        avatarLinks.forEach(link => {
-            link.href = '/perfil-tienda.html';
-        });
+        navRight.innerHTML = `
+            <a href="gestionar-productos.html" style="text-decoration: none; color: #475569; font-weight: 500;">Mis Productos</a>
+            <a href="#" style="text-decoration: none; color: #475569; font-weight: 500;">Mis Ventas</a>
+            <a href="perfil-tienda.html" style="text-decoration: none; color: #475569; font-weight: 500;">Mi Perfil</a>
+            <a href="#" onclick="event.preventDefault(); cerrarSesion();" style="text-decoration: none; color: #ef4444; font-weight: 600;">Cerrar sesión</a>
+        `;
+        
+        // Ocultar buscador y ubicación en todas las vistas si es tienda
+        const search = document.querySelector('.nav-center');
+        if (search) search.style.display = 'none';
+        const location = document.querySelector('.nav-location');
+        if (location) location.style.display = 'none';
+        
+        return;
+    }
 
-        // Agregar el menú de opciones '+' para el rol Tienda
-        const navRightElements = document.querySelectorAll('.nav-right');
-        navRightElements.forEach(navRight => {
-            // Prevenir duplicados si se llama a actualizarNavbar varias veces
-            if (navRight.querySelector('.tienda-options-menu')) return;
-            
-            const tiendaMenu = document.createElement('div');
-            tiendaMenu.className = 'tienda-options-menu';
-            tiendaMenu.innerHTML = `
-                <button class="tienda-options-btn" id="btn-tienda-options" title="Opciones de Tienda">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                </button>
-                <div class="tienda-dropdown" style="display: none;">
-                    <a href="gestionar-productos.html?action=new">Agregar producto</a>
-                    <a href="gestionar-productos.html">Gestionar productos</a>
-                </div>
-            `;
-            
-            // Insertar antes del avatar, o al inicio de nav-right
-            const avatarLink = navRight.querySelector('.nav-avatar-link') || navRight.querySelector('.user-avatar-small');
-            if (avatarLink) {
-                navRight.insertBefore(tiendaMenu, avatarLink);
-            } else {
-                navRight.appendChild(tiendaMenu);
-            }
-
-            // Lógica para mostrar/ocultar el menú
-            const btn = tiendaMenu.querySelector('#btn-tienda-options');
-            const dropdown = tiendaMenu.querySelector('.tienda-dropdown');
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdown.style.display = dropdown.style.display === 'none' ? 'flex' : 'none';
-            });
-            
-            // Cerrar al hacer clic fuera
-            document.addEventListener('click', () => {
-                dropdown.style.display = 'none';
-            });
-        });
+    // ── Lógica para Consumidor ──
+    if (usuario.nombre_rol === 'Consumidor') {
+        navRight.innerHTML = `
+            <a href="pedidos.html" class="icon-btn" title="Mis pedidos">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </a>
+            <a href="carrito.html" class="icon-btn" id="nav-cart-btn" title="Carrito">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            </a>
+            <a href="perfil.html" class="nav-avatar-link"><div class="user-avatar" style="background-color: #cdd4c2;"></div></a>
+            <a href="#" class="icon-btn" style="color: #ef4444;" onclick="event.preventDefault(); cerrarSesion();" title="Cerrar sesión">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </a>
+        `;
+        return;
     }
 }
