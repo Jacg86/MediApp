@@ -4,6 +4,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     actualizarNavbar();
 
+    // Mostrar acciones rápidas si es tienda
+    const usuario = obtenerUsuario();
+    if (usuario && usuario.nombre_rol === 'Tienda') {
+        const storeQuickActions = document.getElementById('store-quick-actions');
+        if (storeQuickActions) {
+            storeQuickActions.style.display = 'flex';
+        }
+    }
+
     const productsGrid = document.getElementById('products-container');
     const loadMoreBtn = document.getElementById('btn-load-more');
     const searchInput = document.getElementById('search-input');
