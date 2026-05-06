@@ -88,6 +88,18 @@ const ProductoController = {
 
             let { nombre, descripcion, id_categoria, precio_original, precio_oferta, stock, fecha_vencimiento, imagen_url, titulo_publicacion } = req.body;
 
+            // Validar fecha de vencimiento (mínimo 20 días)
+            if (!fecha_vencimiento) {
+                return res.status(400).json({ success: false, message: 'La fecha de vencimiento es obligatoria.' });
+            }
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const vencDate = new Date(fecha_vencimiento);
+            const diffDays = Math.ceil((vencDate - hoy) / (1000 * 60 * 60 * 24));
+            if (diffDays < 20) {
+                return res.status(400).json({ success: false, message: 'Por seguridad, no puedes publicar medicamentos que venzan en menos de 20 días.' });
+            }
+
             // Si hay un archivo subido, usamos su ruta
             if (req.file) {
                 imagen_url = `img/uploads/${req.file.filename}`;
@@ -140,6 +152,17 @@ const ProductoController = {
 
             const updateData = { ...req.body };
             
+            // Validar fecha de vencimiento si se envía en actualización
+            if (updateData.fecha_vencimiento) {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                const vencDate = new Date(updateData.fecha_vencimiento);
+                const diffDays = Math.ceil((vencDate - hoy) / (1000 * 60 * 60 * 24));
+                if (diffDays < 20) {
+                    return res.status(400).json({ success: false, message: 'Por seguridad, no puedes publicar medicamentos que venzan en menos de 20 días.' });
+                }
+            }
+
             if (req.file) {
                 updateData.imagen_url = `img/uploads/${req.file.filename}`;
             }

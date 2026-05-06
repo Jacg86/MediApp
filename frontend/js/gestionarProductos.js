@@ -177,7 +177,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (descripcion) formData.append('descripcion', descripcion);
         
         const fechaVencimiento = document.getElementById('prod-vencimiento').value;
-        if (fechaVencimiento) formData.append('fecha_vencimiento', fechaVencimiento);
+        if (!fechaVencimiento) {
+            showToast('La fecha de vencimiento es obligatoria.', 'error');
+            return;
+        }
+
+        // Validar que falten al menos 20 días para el vencimiento
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0); // Ignorar la hora actual
+        const fechaVencDate = new Date(fechaVencimiento + 'T00:00:00');
+        const diffTime = fechaVencDate - hoy;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 20) {
+            showToast('Por seguridad, no puedes publicar medicamentos que venzan en menos de 20 días.', 'error');
+            return;
+        }
+
+        formData.append('fecha_vencimiento', fechaVencimiento);
 
         const fileInput = document.getElementById('prod-imagen-file');
         if (fileInput.files.length > 0) {

@@ -181,7 +181,7 @@ function actualizarNavbar() {
             <a href="carrito.html" class="icon-btn" id="nav-cart-btn" title="Carrito">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
             </a>
-            <a href="perfil.html" class="nav-avatar-link"><div class="user-avatar" style="background-color: #cdd4c2;"></div></a>
+            <a href="perfil-persona.html" class="nav-avatar-link"><div class="user-avatar" style="background-color: #cdd4c2;"></div></a>
             <a href="#" class="icon-btn" style="color: #ef4444;" onclick="event.preventDefault(); cerrarSesion();" title="Cerrar sesión">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             </a>
