@@ -189,6 +189,7 @@ Todos usan la contraseña: **`mediapp123`**
 
 | Correo | Rol | Descripción |
 |--------|-----|-------------|
+| `admin@mediapp.co` | Admin | Administrador general (Aprobaciones/Stats) |
 | `ana@correo.com` | Consumidor | Usuario consumidor de ejemplo |
 | `carlos@correo.com` | Consumidor | Otro consumidor |
 | `saludtotal@tienda.com` | Tienda | Droguería Salud Total |
@@ -210,15 +211,26 @@ Todos usan la contraseña: **`mediapp123`**
 ### Para Tiendas
 - Registro como tienda (con NIT)
 - Gestionar perfil del negocio
+- Crear, editar y eliminar publicaciones de productos (CRUD)
+- **Seguridad**: Bloqueo estricto para no permitir publicar medicamentos con vencimiento menor a 20 días
+- Subir **imágenes reales** para los productos
 - Cambiar contraseña
+
+### Para Administradores
+- Acceso exclusivo al Panel de Control (`admin.html`)
+- Ver estadísticas globales (usuarios y tiendas registradas)
+- Verificar nuevas tiendas pendientes
 
 ### Técnicas
 - Validaciones frontend y backend
+- Subida de archivos e imágenes con **Multer** (multipart/form-data)
+- NavBars e interfaces dinámicas basadas en Roles (Admin, Tienda, Consumidor)
 - Manejo de errores con respuestas JSON
 - JWT para autenticación stateless
 - Transacciones SQL para consistencia
 - Triggers para actualizar timestamps
 - Vista SQL para el catálogo activo
+- Diseño UI moderno (Botones de Acción Flotantes (FAB), Cards estructuradas y animaciones)
 - Diseño responsive
 
 ---
